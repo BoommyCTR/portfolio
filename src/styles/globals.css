@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --bg-color: #081b29;
+  --second-bg-color: #112e42;
+  --text-color: #ededed;
+  --main-color: #00abf0;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.text-stroke {
+  color: transparent;
+  -webkit-text-stroke: 0.7px var(--main-color);
+}
