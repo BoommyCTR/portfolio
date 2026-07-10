@@ -111,7 +111,7 @@ const experience = [
   },
   {
     year: "2025 — Present",
-    title: "Programer, MWA E-Service",
+    title: "Programer, MWA E-Service, YIP IN TSOI & Co., Ltd.",
     desc: "Payment gateway integrations, PDPA-compliant UX, and platform reliability work.",
   },
 ];
