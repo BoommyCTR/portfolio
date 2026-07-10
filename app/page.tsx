@@ -75,7 +75,7 @@ const codeLines: CodeToken[][] = [
   ],
   [
     { text: "  role: " },
-    { text: "'Frontend Developer'", color: "#F5B95C" },
+    { text: "'Programer'", color: "#F5B95C" },
     { text: "," },
   ],
   [
@@ -101,7 +101,7 @@ const codeLineStrings = codeLines.map((line) =>
 const experience = [
   {
     year: "2021 — 2022",
-    title: "Frontend Developer, Company",
+    title: "Programer, Company",
     desc: "Built and maintained customer-facing React applications end to end.",
   },
   {
@@ -111,7 +111,7 @@ const experience = [
   },
   {
     year: "2025 — Present",
-    title: "Frontend Developer, MWA E-Service",
+    title: "Programer, MWA E-Service",
     desc: "Payment gateway integrations, PDPA-compliant UX, and platform reliability work.",
   },
 ];
@@ -313,10 +313,10 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Phurinat Wongkasetchai — Frontend Developer</title>
+        <title>Phurinat Wongkasetchai — Programer</title>
         <meta
           name="description"
-          content="Portfolio of Phurinat Wongkasetchai, Frontend Developer."
+          content="Portfolio of Phurinat Wongkasetchai, Programer."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -412,8 +412,8 @@ const Home: NextPage = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="mt-5 max-w-md text-[#8D96AC]"
               >
-                Frontend developer building fast, accessible interfaces — and
-                the payment flows, forms, and compliance UX behind them.
+                Programer building fast, accessible interfaces — and the payment
+                flows, forms, and compliance UX behind them.
               </motion.p>
 
               <motion.div
