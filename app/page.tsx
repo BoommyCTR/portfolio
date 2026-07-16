@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import { type NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
 import { JetBrains_Mono, Inter } from "next/font/google";
 import {
   motion,
@@ -12,13 +10,27 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import { ArrowUp, ChevronDown, Code2, Server, Wrench } from "lucide-react";
+import { ArrowUp, ChevronDown, Code2, Server, Wrench, X } from "lucide-react";
+
+import {
+  SiReact,
+  SiTypescript,
+  SiNextdotjs,
+  SiTailwindcss,
+  SiSpring,
+  SiGit,
+  SiDocker,
+  SiKubernetes,
+  SiFigma,
+} from "react-icons/si";
+import { FaJava } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-// import aboutme from "../../public/aboutme.jpg";
+import github from "@/public/github.svg";
+import linkedin from "@/public/linkedin.svg";
+import face from "@/public/face.jpg";
 
 /**
  * Colorful, motion-forward rewrite.
@@ -41,7 +53,7 @@ const mono = JetBrains_Mono({
 });
 const inter = Inter({ subsets: ["latin"] });
 
-const MotionButton = motion(Button);
+const MotionButton = motion.create(Button);
 
 // ---------------------------------------------------------------------------
 // Data
@@ -51,7 +63,7 @@ const nav = [
   { href: "#home", label: "Home" },
   { href: "#about", label: "About" },
   { href: "#journey", label: "Journey" },
-  { href: "#skill", label: "Skill" },
+  { href: "#tech stacks", label: "Tech Stacks" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -75,7 +87,7 @@ const codeLines: CodeToken[][] = [
   ],
   [
     { text: "  role: " },
-    { text: "'Programer'", color: "#F5B95C" },
+    { text: "'Programmer'", color: "#F5B95C" },
     { text: "," },
   ],
   [
@@ -98,21 +110,55 @@ const codeLineStrings = codeLines.map((line) =>
   line.map((t) => t.text).join(""),
 );
 
-const experience = [
+type Project = {
+  year: string;
+  title: string;
+  desc: string;
+};
+
+const projectsYIP: Project[] = [
   {
     year: "2021 — 2022",
-    title: "Programer, Company",
+    title: "Customer portal revamp",
+    desc: "Rebuilt the account dashboard in React, cutting load time in half.",
+  },
+  {
+    year: "2023 — 2024",
+    title: "Internal billing service",
+    desc: "Spring Boot service handling invoice generation and reconciliation.",
+  },
+  {
+    year: "2025 — Present",
+    title: "CS Payment Gateway integration",
+    desc: "Encryption, callback handling, and a type-safe refactor of the payment flow.",
+  },
+];
+
+type Experience = {
+  year: string;
+  title: string;
+  desc: string;
+  projects: Project[];
+};
+
+const experience: Experience[] = [
+  {
+    year: "2021 — 2022",
+    title: "Programmer, Company",
     desc: "Built and maintained customer-facing React applications end to end.",
+    projects: [],
   },
   {
     year: "2023 — 2024",
     title: "Fullstack Developer, Company",
     desc: "Shipped features across a React/TypeScript frontend and a Spring Boot backend.",
+    projects: [],
   },
   {
     year: "2025 — Present",
-    title: "Programer, MWA E-Service, YIP IN TSOI & Co., Ltd.",
+    title: "Programmer, MWA E-Service, YIP IN TSOI & Co., Ltd.",
     desc: "Payment gateway integrations, PDPA-compliant UX, and platform reliability work.",
+    projects: projectsYIP,
   },
 ];
 
@@ -122,9 +168,9 @@ const skillGroups = [
     icon: Code2,
     accent: "#63D2C0",
     items: [
-      { name: "React / Next.js", level: 92 },
-      { name: "TypeScript", level: 85 },
-      { name: "Tailwind CSS", level: 90 },
+      { name: "React / Next.js", level: "intermediate" },
+      { name: "TypeScript", level: "intermediate" },
+      { name: "Tailwind CSS", level: "intermediate" },
     ],
   },
   {
@@ -132,9 +178,9 @@ const skillGroups = [
     icon: Server,
     accent: "#9A8CFF",
     items: [
-      { name: "Spring Boot", level: 82 },
-      { name: "Java", level: 80 },
-      { name: "REST APIs", level: 88 },
+      { name: "Spring Boot", level: "beginner" },
+      { name: "Java", level: "beginner" },
+      { name: "REST APIs", level: "intermediate" },
     ],
   },
   {
@@ -142,11 +188,24 @@ const skillGroups = [
     icon: Wrench,
     accent: "#F5B95C",
     items: [
-      { name: "Git & CI/CD", level: 85 },
-      { name: "Docker / K8s", level: 70 },
-      { name: "Figma", level: 65 },
+      { name: "Git & CI/CD", level: "beginner" },
+      { name: "Docker / K8s", level: "beginner" },
+      { name: "Figma", level: "intermediate" },
     ],
   },
+];
+
+const marqueeIcons = [
+  { name: "React", Icon: SiReact, color: "#63D2C0" },
+  { name: "TypeScript", Icon: SiTypescript, color: "#9A8CFF" },
+  { name: "Next.js", Icon: SiNextdotjs, color: "#EDF0F7" },
+  { name: "Tailwind CSS", Icon: SiTailwindcss, color: "#63D2C0" },
+  { name: "Spring", Icon: SiSpring, color: "#9A8CFF" },
+  { name: "Java", Icon: FaJava, color: "#F5B95C" },
+  { name: "Git", Icon: SiGit, color: "#FF8F6B" },
+  { name: "Docker", Icon: SiDocker, color: "#63D2C0" },
+  { name: "Kubernetes", Icon: SiKubernetes, color: "#9A8CFF" },
+  { name: "Figma", Icon: SiFigma, color: "#F5B95C" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -264,33 +323,194 @@ function CodeWindow() {
   );
 }
 
-function SkillBar({
-  name,
-  level,
-  accent,
-  delay,
-}: {
-  name: string;
-  level: number;
-  accent: string;
-  delay: number;
-}) {
+function SkillMarquee() {
+  // Repeat the set enough times that the track is always wider than the
+  // viewport (otherwise wide screens show blank space before it loops back).
+  const REPEAT = 4;
+  const track = Array.from({ length: REPEAT }).flatMap(() => marqueeIcons);
+
   return (
-    <div>
-      <div className="mb-1.5 flex justify-between text-sm">
-        <span className="text-[#EDF0F7]">{name}</span>
-        <span className="text-[#8D96AC]">{level}%</span>
-      </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#1B2334]">
+    <div className="relative mt-16 overflow-hidden">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#0B0F1A] to-transparent sm:w-28" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0B0F1A] to-transparent sm:w-28" />
+
+      <motion.div
+        className="flex w-max items-center gap-14"
+        animate={{ x: ["0%", `-${100 / REPEAT}%`] }}
+        transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+      >
+        {track.map(({ name, Icon, color }, i) => (
+          <div
+            key={`${name}-${i}`}
+            className="flex flex-col items-center gap-2 opacity-60 transition-opacity hover:opacity-100"
+          >
+            <Icon className="h-12 w-12" style={{ color }} />
+            <span className={`${mono.className} text-[15px] text-[#8D96AC]`}>
+              {name}
+            </span>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Journey: clickable experience list + sliding projects panel
+// ---------------------------------------------------------------------------
+
+function ExperienceTimeline() {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start center", "end center"],
+  });
+  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  const sorted = useMemo(
+    () => [...experience].sort((a, b) => a.year.localeCompare(b.year)),
+    [],
+  );
+
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const active = activeIndex !== null ? sorted[activeIndex] : null;
+
+  return (
+    <div ref={timelineRef} className="relative mx-auto max-w-2xl md:max-w-none">
+      <motion.div
+        layout
+        className="flex flex-col gap-8 md:flex-row md:items-start md:justify-center"
+      >
+        {/* Left: the timeline itself. Cards shrink into compact tabs once one is opened. */}
         <motion.div
-          className="h-1.5 rounded-full"
-          style={{ background: accent }}
-          initial={{ width: 0 }}
-          whileInView={{ width: `${level}%` }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 1, delay, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </div>
+          layout
+          transition={{ layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
+          className={`relative ${
+            active
+              ? "w-full md:w-[22rem] md:shrink-0"
+              : "mx-auto w-full max-w-2xl"
+          }`}
+        >
+          <div className="absolute left-[7px] top-0 h-full w-px bg-[#232B40]" />
+          <motion.div
+            className="absolute left-[7px] top-0 w-px origin-top bg-gradient-to-b from-[#9A8CFF] via-[#63D2C0] to-[#F5B95C]"
+            style={{ scaleY: lineScale, height: "100%" }}
+          />
+
+          <div className="space-y-6">
+            {sorted.map((item, i) => {
+              const hasProjects = item.projects.length > 0;
+              const isActive = activeIndex === i;
+
+              return (
+                <Reveal
+                  key={item.title}
+                  delay={(i % 4) * 0.05}
+                  className="relative pl-8"
+                >
+                  <span
+                    className="absolute left-0 top-1.5 h-4 w-4 rounded-full border-2 border-[#0B0F1A] transition-colors"
+                    style={{ background: isActive ? "#FF8F6B" : "#63D2C0" }}
+                  />
+                  <motion.div
+                    layout
+                    onClick={() => {
+                      if (!hasProjects) return;
+                      setActiveIndex(isActive ? null : i);
+                    }}
+                    whileHover={hasProjects ? { y: -4 } : undefined}
+                    transition={{
+                      layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+                    }}
+                    className={`rounded-2xl border p-6 transition-colors ${
+                      hasProjects ? "cursor-pointer" : "cursor-default"
+                    } ${
+                      isActive
+                        ? "border-[#FF8F6B] bg-[#171223]"
+                        : "border-[#232B40] bg-[#131A2B]"
+                    }`}
+                  >
+                    <div className={`${mono.className} text-xs text-[#8D96AC]`}>
+                      {item.year}
+                    </div>
+                    <div className="mt-1 font-medium">{item.title}</div>
+
+                    <AnimatePresence initial={false}>
+                      {!active && (
+                        <motion.div
+                          initial={false}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <p className="mt-1 text-sm text-[#8D96AC]">
+                            {item.desc}
+                          </p>
+                          {hasProjects && (
+                            <p className="mt-4 text-right text-xs text-[#63D2C0]">
+                              Projects &gt;
+                            </p>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Right: the sliding projects panel, connected back to its source card. */}
+        <AnimatePresence mode="popLayout">
+          {active && (
+            <motion.div
+              key={activeIndex}
+              layout
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 40 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full md:max-w-lg border p-5 rounded-3xl border-[#232B40]"
+            >
+              <div className="mb-4 flex items-start justify-between gap-4 border-b border-[#232B40] pb-4">
+                <div>
+                  <p className="text-xs text-[#8D96AC]">Projects from</p>
+                  <p className="font-medium text-[#FF8F6B]">{active.title}</p>
+                </div>
+                <button
+                  onClick={() => setActiveIndex(null)}
+                  aria-label="Close"
+                  className="rounded-full border border-[#232B40] p-1.5 text-[#8D96AC] transition-colors hover:bg-[#161D2E] hover:text-[#EDF0F7]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {active.projects.map((project) => (
+                  <motion.div
+                    key={project.title}
+                    layout
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35 }}
+                    className="rounded-2xl border border-[#232B40] bg-[#131A2B] p-5"
+                  >
+                    <p className={`${mono.className} text-xs text-[#8D96AC]`}>
+                      {project.year}
+                    </p>
+                    <p className="mt-1 font-medium">{project.title}</p>
+                    <p className="mt-1 text-sm text-[#8D96AC]">
+                      {project.desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
@@ -303,36 +523,25 @@ const Home: NextPage = () => {
   const [spotlight, setSpotlight] = useState({ x: 50, y: 50 });
   const [hovered, setHovered] = useState<number | null>(null);
 
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: timelineRef,
-    offset: ["start center", "end center"],
-  });
-  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   return (
     <>
-      <Head>
-        <title>Phurinat Wongkasetchai — Programer</title>
-        <meta
-          name="description"
-          content="Portfolio of Phurinat Wongkasetchai, Programer."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main
         className={`${inter.className} min-h-screen overflow-x-hidden bg-[#0B0F1A] text-[#EDF0F7] antialiased`}
       >
         {/* Nav */}
-        <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+        <motion.header
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="fixed inset-x-0 top-0 z-50 px-4 pt-4"
+        >
           <nav className="mx-auto flex max-w-3xl items-center justify-between rounded-full border border-[#232B40] bg-[#0B0F1A]/80 px-3 py-2 backdrop-blur">
-            <Link
+            <a
               href="#home"
               className={`${mono.className} px-3 text-sm font-medium`}
             >
               boom<span className="text-[#63D2C0]">.dev</span>
-            </Link>
+            </a>
             <div className="hidden gap-1 sm:flex">
               {nav.map((item, i) => (
                 <a
@@ -364,7 +573,7 @@ const Home: NextPage = () => {
               <a href="#contact">Say hi</a>
             </Button>
           </nav>
-        </header>
+        </motion.header>
 
         {/* Hero */}
         <section
@@ -412,8 +621,8 @@ const Home: NextPage = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="mt-5 max-w-md text-[#8D96AC]"
               >
-                Programer building fast, accessible interfaces — and the payment
-                flows, forms, and compliance UX behind them.
+                Programmer building fast, accessible interfaces — and the
+                payment flows, forms, and compliance UX behind them.
               </motion.p>
 
               <motion.div
@@ -459,25 +668,36 @@ const Home: NextPage = () => {
                 </MotionButton>
 
                 <div className="ml-1 flex gap-1">
-                  {/* {[
-                    { Icon: Twitter, href: "#", label: "Twitter" },
+                  {[
                     {
-                      Icon: Linkedin,
+                      Icon: linkedin,
                       href: "https://www.linkedin.com/in/phurinat/",
                       label: "LinkedIn",
                     },
-                    { Icon: Facebook, href: "#", label: "Facebook" },
+                    {
+                      Icon: github,
+                      href: "https://github.com/BoommyCTR",
+                      label: "GitHub",
+                    },
                   ].map(({ Icon, href, label }) => (
-                    <Button key={label} variant="ghost" size="icon" asChild>
+                    <Button
+                      key={label}
+                      size="icon"
+                      className="bg-white hover:bg-white/70"
+                    >
                       <a
                         href={href}
                         aria-label={label}
                         className="text-[#8D96AC] hover:text-[#EDF0F7]"
                       >
-                        <Icon className="h-4 w-4" />
+                        <Image
+                          src={Icon}
+                          alt={label}
+                          className="h-4 w-4 fill-white"
+                        />
                       </a>
                     </Button>
-                  ))} */}
+                  ))}
                 </div>
               </motion.div>
             </div>
@@ -519,11 +739,11 @@ const Home: NextPage = () => {
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
                 className="relative h-full w-full overflow-hidden rounded-[2rem] border border-[#232B40]"
               >
-                {/* <Image
-                  src={aboutme}
+                <Image
+                  src={face}
                   alt="Portrait of Phurinat Wongkasetchai"
                   className="h-full w-full object-cover"
-                /> */}
+                />
               </motion.div>
             </Reveal>
 
@@ -551,6 +771,7 @@ const Home: NextPage = () => {
                 <Button
                   variant="outline"
                   className="border-[#232B40] bg-transparent text-[#EDF0F7] hover:bg-[#161D2E] hover:text-[#EDF0F7]"
+                  onClick={() => {}}
                 >
                   Download résumé
                 </Button>
@@ -568,38 +789,15 @@ const Home: NextPage = () => {
             </h2>
           </Reveal>
 
-          <div ref={timelineRef} className="relative mx-auto max-w-2xl">
-            <div className="absolute left-[7px] top-0 h-full w-px bg-[#232B40]" />
-            <motion.div
-              className="absolute left-[7px] top-0 w-px origin-top bg-gradient-to-b from-[#9A8CFF] via-[#63D2C0] to-[#F5B95C]"
-              style={{ scaleY: lineScale, height: "100%" }}
-            />
-
-            <div className="space-y-10">
-              {[...experience]
-                .sort((a, b) => a.year.localeCompare(b.year))
-                .map((item, i) => (
-                  <Reveal
-                    key={item.title}
-                    delay={(i % 4) * 0.05}
-                    className="relative pl-8"
-                  >
-                    <span className="absolute left-0 top-1.5 h-4 w-4 rounded-full border-2 border-[#0B0F1A] bg-[#63D2C0]" />
-                    <p className={`${mono.className} text-xs text-[#8D96AC]`}>
-                      {item.year}
-                    </p>
-                    <p className="mt-1 font-medium">{item.title}</p>
-                    <p className="mt-1 text-sm text-[#8D96AC]">{item.desc}</p>
-                  </Reveal>
-                ))}
-            </div>
-          </div>
+          <ExperienceTimeline />
         </section>
 
-        {/* Skills */}
-        <section id="skill" className="relative px-6 py-28">
+        {/* Tech Stacks */}
+        <section id="tech stacks" className="relative px-6 py-28">
           <Reveal className="mx-auto mb-16 max-w-2xl text-center">
-            <p className="mb-2 text-sm font-medium text-[#9A8CFF]">Skills</p>
+            <p className="mb-2 text-sm font-medium text-[#9A8CFF]">
+              Tech Stacks
+            </p>
             <h2 className={`${mono.className} text-2xl font-bold sm:text-3xl`}>
               What I work with
             </h2>
@@ -629,14 +827,16 @@ const Home: NextPage = () => {
                       {group.title}
                     </h3>
                     <div className="space-y-4">
-                      {group.items.map((item, ii) => (
-                        <SkillBar
-                          key={item.name}
-                          name={item.name}
-                          level={item.level}
-                          accent={group.accent}
-                          delay={ii * 0.1}
-                        />
+                      {group.items.map((item) => (
+                        <div key={item.name}>
+                          {item.name}:{" "}
+                          <span
+                            className="font-bold"
+                            style={{ color: group.accent }}
+                          >
+                            {item.level}
+                          </span>
+                        </div>
                       ))}
                     </div>
                   </motion.div>
@@ -644,6 +844,10 @@ const Home: NextPage = () => {
               );
             })}
           </div>
+
+          <Reveal delay={0.15}>
+            <SkillMarquee />
+          </Reveal>
         </section>
 
         {/* Contact */}
@@ -709,7 +913,7 @@ const Home: NextPage = () => {
               whileTap={{ scale: 0.95 }}
               variant="outline"
               size="icon"
-              className="rounded-full border-[#232B40] bg-transparent text-[#EDF0F7] hover:bg-[#161D2E]"
+              className="rounded-full border-[#232B40] bg-transparent text-[#EDF0F7] hover:bg-[#161D2E] hover:text-[#EDF0F7]"
             >
               <a href="#home" aria-label="Back to top">
                 <ArrowUp className="h-4 w-4" />
